@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stimmenwerk</title>
+<style>
+  :root { --bg:#0e1014; --card:#171a21; --card2:#1e232c; --line:#2a3040; --txt:#e8eaf0; --dim:#8b93a7; --acc:#7c5cff; --acc2:#4ecdc4; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--txt); min-height:100vh; padding:24px; }
+  .wrap { max-width:760px; margin:0 auto; }
+  h1 { font-size:1.7rem; margin-bottom:4px; }
+  h1 span { color:var(--acc); }
+  .sub { color:var(--dim); font-size:.9rem; margin-bottom:20px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; margin-bottom:16px; }
+  label { display:block; font-size:.8rem; color:var(--dim); margin-bottom:6px; letter-spacing:.4px; }
+  textarea { width:100%; min-height:140px; background:var(--card2); border:1px solid var(--line); border-radius:10px; color:var(--txt); padding:12px; font-size:1rem; resize:vertical; }
+  textarea:focus, select:focus { outline:2px solid var(--acc); border-color:transparent; }
+  select { width:100%; background:var(--card2); border:1px solid var(--line); border-radius:10px; color:var(--txt); padding:10px 12px; font-size:.95rem; }
+  .row { display:flex; gap:14px; margin-top:14px; align-items:center; flex-wrap:wrap; }
+  .row > div { flex:1; min-width:180px; }
+  input[type=range] { width:100%; accent-color:var(--acc); }
+  .val { color:var(--acc2); font-size:.85rem; }
+  .btns { display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
+  button { flex:1; min-width:160px; background:var(--acc); color:#fff; border:none; border-radius:10px; padding:13px 18px; font-size:1rem; cursor:pointer; transition:.15s; }
+  button:hover:not(:disabled) { filter:brightness(1.15); }
+  button.ghost { background:var(--card2); border:1px solid var(--line); }
+  button:disabled { opacity:.45; cursor:not-allowed; }
+  #status { margin-top:14px; font-size:.88rem; color:var(--dim); min-height:1.3em; }
+  #status.err { color:#ff6b6b; }
+  .bar { height:6px; background:var(--card2); border-radius:3px; overflow:hidden; margin-top:8px; display:none; }
+  .bar > div { height:100%; width:0%; background:linear-gradient(90deg,var(--acc),var(--acc2)); transition:width .2s; }
+  .hint { font-size:.8rem; color:var(--dim); margin-top:10px; line-height:1.5; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Stimmen<span>werk</span></h1>
+  <div class="sub">Neuronale Sprachausgabe, offline auf deinem Rechner. 118 Stimmen, echte Modelle statt Browserstimme.</div>
+
+  <div class="card">
+    <label for="voice">Stimme</label>
+    <select id="voice"><optgroup label="Deutsch">
+<option value="de_DE-thorsten-high">thorsten (high)</option>
+<option value="de_DE-thorsten-medium">thorsten (medium)</option>
+<option value="de_DE-thorsten-low">thorsten (low)</option>
+<option value="de_DE-thorsten_emotional-medium">thorsten emotional (medium)</option>
+<option value="de_DE-karlsson-low">karlsson (low)</option>
+<option value="de_DE-eva_k-x_low">eva k (x_low)</option>
+<option value="de_DE-kerstin-low">kerstin (low)</option>
+<option value="de_DE-ramona-low">ramona (low)</option>
+<option value="de_DE-pavoque-low">pavoque (low)</option>
+<option value="de_DE-mls-medium">mls (medium)</option>
+</optgroup>
+<optgroup label="Englisch (UK)">
+<option value="en_GB-alan-low">alan (low)</option>
+<option value="en_GB-alan-medium">alan (medium)</option>
+<option value="en_GB-alba-medium">alba (medium)</option>
+<option value="en_GB-aru-medium">aru (medium)</option>
+<option value="en_GB-cori-high">cori (high)</option>
+<option value="en_GB-cori-medium">cori (medium)</option>
+<option value="en_GB-jenny_dioco-medium">jenny dioco (medium)</option>
+<option value="en_GB-northern_english_male-medium">northern english male (medium)</option>
+<option value="en_GB-semaine-medium">semaine (medium)</option>
+<option value="en_GB-southern_english_female-low">southern english female (low)</option>
+<option value="en_GB-vctk-medium">vctk (medium)</option>
+</optgroup>
+<optgroup label="Englisch (US)">
+<option value="en_US-amy-low">amy (low)</option>
+<option value="en_US-amy-medium">amy (medium)</option>
+<option value="en_US-arctic-medium">arctic (medium)</option>
+<option value="en_US-danny-low">danny (low)</option>
+<option value="en_US-hfc_female-medium">hfc female (medium)</option>
+<option value="en_US-hfc_male-medium">hfc male (medium)</option>
+<option value="en_US-joe-medium">joe (medium)</option>
+<option value="en_US-kathleen-low">kathleen (low)</option>
+<option value="en_US-kristin-medium">kristin (medium)</option>
+<option value="en_US-kusal-medium">kusal (medium)</option>
+<option value="en_US-l2arctic-medium">l2arctic (medium)</option>
+<option value="en_US-lessac-high">lessac (high)</option>
+<option value="en_US-lessac-low">lessac (low)</option>
+<option value="en_US-lessac-medium">lessac (medium)</option>
+<option value="en_US-libritts-high">libritts (high)</option>
+<option value="en_US-libritts_r-medium">libritts r (medium)</option>
+<option value="en_US-ljspeech-high">ljspeech (high)</option>
+<option value="en_US-ljspeech-medium">ljspeech (medium)</option>
+<option value="en_US-ryan-high">ryan (high)</option>
+<option value="en_US-ryan-low">ryan (low)</option>
+<option value="en_US-ryan-medium">ryan (medium)</option>
+</optgroup>
+<optgroup label="Arabisch">
+<option value="ar_JO-kareem-low">kareem (low)</option>
+<option value="ar_JO-kareem-medium">kareem (medium)</option>
+</optgroup>
+<optgroup label="Katalanisch">
+<option value="ca_ES-upc_ona-medium">upc ona (medium)</option>
+<option value="ca_ES-upc_ona-x_low">upc ona (x_low)</option>
+<option value="ca_ES-upc_pau-x_low">upc pau (x_low)</option>
+</optgroup>
+<optgroup label="Tschechisch">
+<option value="cs_CZ-jirka-low">jirka (low)</option>
+<option value="cs_CZ-jirka-medium">jirka (medium)</option>
+</optgroup>
+<optgroup label="Dänisch">
+<option value="da_DK-talesyntese-medium">talesyntese (medium)</option>
+</optgroup>
+<optgroup label="Griechisch">
+<option value="el_GR-rapunzelina-low">rapunzelina (low)</option>
+</optgroup>
+<optgroup label="Spanisch">
+<option value="es_ES-carlfm-x_low">carlfm (x_low)</option>
+<option value="es_ES-davefx-medium">davefx (medium)</option>
+<option value="es_ES-mls_10246-low">mls 10246 (low)</option>
+<option value="es_ES-mls_9972-low">mls 9972 (low)</option>
+<option value="es_ES-sharvard-medium">sharvard (medium)</option>
+</optgroup>
+<optgroup label="Spanisch (Mexiko)">
+<option value="es_MX-ald-medium">ald (medium)</option>
+<option value="es_MX-claude-high">claude (high)</option>
+</optgroup>
+<optgroup label="Persisch">
+<option value="fa_IR-amir-medium">amir (medium)</option>
+<option value="fa_IR-gyro-medium">gyro (medium)</option>
+</optgroup>
+<optgroup label="Finnisch">
+<option value="fi_FI-harri-low">harri (low)</option>
+<option value="fi_FI-harri-medium">harri (medium)</option>
+</optgroup>
+<optgroup label="Französisch">
+<option value="fr_FR-gilles-low">gilles (low)</option>
+<option value="fr_FR-mls-medium">mls (medium)</option>
+<option value="fr_FR-mls_1840-low">mls 1840 (low)</option>
+<option value="fr_FR-siwis-low">siwis (low)</option>
+<option value="fr_FR-siwis-medium">siwis (medium)</option>
+<option value="fr_FR-tom-medium">tom (medium)</option>
+<option value="fr_FR-upmc-medium">upmc (medium)</option>
+</optgroup>
+<optgroup label="Ungarisch">
+<option value="hu_HU-anna-medium">anna (medium)</option>
+<option value="hu_HU-berta-medium">berta (medium)</option>
+<option value="hu_HU-imre-medium">imre (medium)</option>
+</optgroup>
+<optgroup label="Isländisch">
+<option value="is_IS-bui-medium">bui (medium)</option>
+<option value="is_IS-salka-medium">salka (medium)</option>
+<option value="is_IS-steinn-medium">steinn (medium)</option>
+<option value="is_IS-ugla-medium">ugla (medium)</option>
+</optgroup>
+<optgroup label="Italienisch">
+<option value="it_IT-riccardo-x_low">riccardo (x_low)</option>
+</optgroup>
+<optgroup label="Georgisch">
+<option value="ka_GE-natia-medium">natia (medium)</option>
+</optgroup>
+<optgroup label="Kasachisch">
+<option value="kk_KZ-iseke-x_low">iseke (x_low)</option>
+<option value="kk_KZ-issai-high">issai (high)</option>
+<option value="kk_KZ-raya-x_low">raya (x_low)</option>
+</optgroup>
+<optgroup label="Luxemburgisch">
+<option value="lb_LU-marylux-medium">marylux (medium)</option>
+</optgroup>
+<optgroup label="Nepalesisch">
+<option value="ne_NP-google-medium">google (medium)</option>
+<option value="ne_NP-google-x_low">google (x_low)</option>
+</optgroup>
+<optgroup label="Niederländisch (Belgien)">
+<option value="nl_BE-nathalie-medium">nathalie (medium)</option>
+<option value="nl_BE-nathalie-x_low">nathalie (x_low)</option>
+<option value="nl_BE-rdh-medium">rdh (medium)</option>
+<option value="nl_BE-rdh-x_low">rdh (x_low)</option>
+</optgroup>
+<optgroup label="Niederländisch">
+<option value="nl_NL-mls-medium">mls (medium)</option>
+<option value="nl_NL-mls_5809-low">mls 5809 (low)</option>
+<option value="nl_NL-mls_7432-low">mls 7432 (low)</option>
+</optgroup>
+<optgroup label="Norwegisch">
+<option value="no_NO-talesyntese-medium">talesyntese (medium)</option>
+</optgroup>
+<optgroup label="Polnisch">
+<option value="pl_PL-darkman-medium">darkman (medium)</option>
+<option value="pl_PL-gosia-medium">gosia (medium)</option>
+<option value="pl_PL-mc_speech-medium">mc speech (medium)</option>
+<option value="pl_PL-mls_6892-low">mls 6892 (low)</option>
+</optgroup>
+<optgroup label="Portugiesisch (Brasilien)">
+<option value="pt_BR-edresson-low">edresson (low)</option>
+<option value="pt_BR-faber-medium">faber (medium)</option>
+</optgroup>
+<optgroup label="Rumänisch">
+<option value="ro_RO-mihai-medium">mihai (medium)</option>
+</optgroup>
+<optgroup label="Russisch">
+<option value="ru_RU-denis-medium">denis (medium)</option>
+<option value="ru_RU-dmitri-medium">dmitri (medium)</option>
+<option value="ru_RU-irina-medium">irina (medium)</option>
+<option value="ru_RU-ruslan-medium">ruslan (medium)</option>
+</optgroup>
+<optgroup label="Slowakisch">
+<option value="sk_SK-lili-medium">lili (medium)</option>
+</optgroup>
+<optgroup label="Slowenisch">
+<option value="sl_SI-artur-medium">artur (medium)</option>
+</optgroup>
+<optgroup label="Serbisch">
+<option value="sr_RS-serbski_institut-medium">serbski institut (medium)</option>
+</optgroup>
+<optgroup label="Schwedisch">
+<option value="sv_SE-nst-medium">nst (medium)</option>
+</optgroup>
+<optgroup label="Suaheli">
+<option value="sw_CD-lanfrica-medium">lanfrica (medium)</option>
+</optgroup>
+<optgroup label="Türkisch">
+<option value="tr_TR-dfki-medium">dfki (medium)</option>
+<option value="tr_TR-fahrettin-medium">fahrettin (medium)</option>
+<option value="tr_TR-fettah-medium">fettah (medium)</option>
+</optgroup>
+<optgroup label="Ukrainisch">
+<option value="uk_UA-lada-x_low">lada (x_low)</option>
+<option value="uk_UA-ukrainian_tts-medium">ukrainian tts (medium)</option>
+</optgroup>
+<optgroup label="Vietnamesisch">
+<option value="vi_VN-25hours_single-low">25hours single (low)</option>
+<option value="vi_VN-vais1000-medium">vais1000 (medium)</option>
+<option value="vi_VN-vivos-x_low">vivos (x_low)</option>
+</optgroup>
+<optgroup label="Chinesisch">
+<option value="zh_CN-huayan-medium">huayan (medium)</option>
+<option value="zh_CN-huayan-x_low">huayan (x_low)</option>
+</optgroup></select>
+    <div class="row">
+      <div>
+        <label for="speed">Geschwindigkeit</label>
+        <input type="range" id="speed" min="0.6" max="1.4" step="0.05" value="1">
+      </div>
+      <div>
+        <label>Tempo</label>
+        <span class="val" id="speedVal">1.00×</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <label for="text">Text</label>
+    <textarea id="text">Hallo! Ich bin eine neuronale Stimme und laufe komplett auf deinem Rechner, ohne Internet und ohne Browserstimme. Kling ich gut, oder kling ich gut?</textarea>
+    <div class="btns">
+      <button id="speak">Sprechen</button>
+      <button id="save" class="ghost">Als WAV speichern</button>
+    </div>
+    <div id="status"></div>
+    <div class="bar" id="bar"><div id="barFill"></div></div>
+    <div class="hint">Erste Nutzung einer Stimme: sie wird einmal heruntergeladen (die Qualität steht am Ende der Namen, von x_low, rund 10 MB bis high, rund 120 MB) und danach dauerhaft lokal gespeichert. Danach läuft alles ohne Internet. Beim Rechnen kann die Seite kurz haken, das ist normal.</div>
+  </div>
+</div>
+
+<script type="module">
+const WORKER_SRC = [
+"import('https://cdn.jsdelivr.net/npm/@diffusionstudio/vits-web@1.0.3/+esm').then(async (tts) => {",
+"  self.postMessage({ type: 'ready' });",
+"  self.onmessage = async (e) => {",
+"    const d = e.data;",
+"    try {",
+"      if (d.type === 'speak') {",
+"        const stored = await tts.stored();",
+"        if (!stored.includes(d.voiceId)) {",
+"          self.postMessage({ type: 'status', msg: 'downloading' });",
+"          await tts.download(d.voiceId, (p) => {",
+"            if (p && p.total) self.postMessage({ type: 'progress', pct: Math.round(p.loaded * 100 / p.total) });",
+"          });",
+"          self.postMessage({ type: 'status', msg: 'loaded' });",
+"        }",
+"        self.postMessage({ type: 'status', msg: 'computing' });",
+"        const wav = await tts.predict({ text: d.text, voiceId: d.voiceId });",
+"        self.postMessage({ type: 'done', wav: wav });",
+"      }",
+"    } catch (err) {",
+"      self.postMessage({ type: 'error', msg: String(err && err.message ? err.message : err) });",
+"    }",
+"  };",
+"}).catch((err) => {",
+"  self.postMessage({ type: 'error', msg: 'Engine konnte nicht geladen werden: ' + String(err && err.message ? err.message : err) });",
+"});",
+].join("\n");
+
+const voiceSel = document.getElementById('voice');
+const textEl = document.getElementById('text');
+const speakBtn = document.getElementById('speak');
+const saveBtn = document.getElementById('save');
+const statusEl = document.getElementById('status');
+const bar = document.getElementById('bar');
+const barFill = document.getElementById('barFill');
+const speedEl = document.getElementById('speed');
+const speedVal = document.getElementById('speedVal');
+let busy = false;
+let worker = null;
+let pendingSave = false;
+
+speedEl.addEventListener('input', () => { speedVal.textContent = Number(speedEl.value).toFixed(2) + '\u00d7'; });
+
+function status(msg, isErr=false) { statusEl.textContent = msg; statusEl.className = isErr ? 'err' : ''; }
+function showPct(pct) {
+  if (pct == null) { bar.style.display = 'none'; return; }
+  bar.style.display = 'block';
+  barFill.style.width = pct + '%';
+  status('Lade Stimme herunter (einmalig) ... ' + pct + '%');
+}
+function setBusy(v) { busy = v; speakBtn.disabled = v; saveBtn.disabled = v; }
+
+function handleMessage(d) {
+  if (d.type === 'progress') showPct(d.pct);
+  else if (d.type === 'status') {
+    if (d.msg === 'downloading') status('Stimme wird zum ersten Mal geladen, bitte warten.');
+    else if (d.msg === 'loaded') { showPct(null); status('Stimme geladen, wird dauerhaft lokal gespeichert.'); }
+    else if (d.msg === 'computing') { showPct(null); status('Modell rechnet ... das kann ein paar Sekunden dauern.'); }
+  }
+  else if (d.type === 'error') { showPct(null); status('Fehler: ' + d.msg, true); setBusy(false); }
+  else if (d.type === 'done') {
+    showPct(null);
+    const url = URL.createObjectURL(d.wav);
+    if (pendingSave) {
+      const a = document.createElement('a');
+      a.href = url; a.download = 'stimmenwerk.wav'; a.click();
+      status('WAV gespeichert.');
+    } else {
+      const audio = new Audio(url);
+      audio.playbackRate = Number(speedEl.value);
+      audio.play();
+      status('L\u00e4uft.');
+    }
+    pendingSave = false;
+    setBusy(false);
+  }
+}
+
+function getWorker() {
+  if (worker) return worker;
+  worker = new Worker(URL.createObjectURL(new Blob([WORKER_SRC], { type: 'text/javascript' })), { type: 'module' });
+  worker.onmessage = (e) => handleMessage(e.data);
+  worker.onerror = (e) => { status('Fehler im Hintergrundprozess: ' + e.message, true); setBusy(false); };
+  return worker;
+}
+
+function run(save) {
+  if (busy) return;
+  const text = textEl.value.trim();
+  if (!text) { status('Erst einen Text eintippen.', true); return; }
+  setBusy(true);
+  pendingSave = save;
+  try {
+    getWorker().postMessage({ type: 'speak', text: text, voiceId: voiceSel.value });
+  } catch (e) {
+    status('Fehler: ' + (e && e.message ? e.message : e), true);
+    setBusy(false);
+  }
+}
+
+speakBtn.addEventListener('click', () => run(false));
+saveBtn.addEventListener('click', () => run(true));
+</script>
+</body>
+</html>
